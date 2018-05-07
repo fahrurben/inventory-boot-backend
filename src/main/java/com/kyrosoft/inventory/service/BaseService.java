@@ -51,4 +51,12 @@ public interface BaseService<T extends IdentifiableEntity,S extends BaseDTO> {
      */
     public void delete(T entity) throws ServiceException;
 
+    /**
+     * Search entities, filter by data tranfer object
+     *
+     * @param searchDTO the data transfer object
+     * @return the search result
+     * @throws ServiceException the exception
+     */
+    public SearchResult<T> search(S searchDTO) throws ServiceException;
 }

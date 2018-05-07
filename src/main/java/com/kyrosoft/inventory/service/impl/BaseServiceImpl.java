@@ -1,19 +1,29 @@
 package com.kyrosoft.inventory.service.impl;
 
 import com.kyrosoft.inventory.ServiceException;
-import com.kyrosoft.inventory.model.ActivableEntity;
-import com.kyrosoft.inventory.model.AuditableEntity;
-import com.kyrosoft.inventory.model.IdentifiableEntity;
-import com.kyrosoft.inventory.model.ServiceContext;
+import com.kyrosoft.inventory.model.*;
 import com.kyrosoft.inventory.model.dto.BaseDTO;
+import com.kyrosoft.inventory.model.dto.SortType;
 import com.kyrosoft.inventory.repository.BaseRepository;
+import org.apache.commons.collections.IteratorUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.domain.Specifications;
 
 import javax.persistence.PersistenceException;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -25,7 +35,7 @@ import java.util.Set;
  * @author fahrur
  * @version 1.0
  */
-public class BaseServiceImpl<T extends IdentifiableEntity,
+public abstract class BaseServiceImpl<T extends IdentifiableEntity,
         S extends BaseRepository<T,Long>,
         U extends BaseDTO
         > {
@@ -207,6 +217,70 @@ public class BaseServiceImpl<T extends IdentifiableEntity,
             throw new ServiceException("Can't delete "+classType.getCanonicalName(),e);
         }
 
+    }
+
+    /**
+     * Get page request object from DTO, it's use for repository.find
+     *
+     * @param dto the dto object
+     * @return the page request object
+     */
+    protected Pageable getPageRequestFromDTO(U dto) {
+        Pageable pageable = null;
+        if(dto.getSortBy()!=null && !dto.getSortBy().trim().equalsIgnoreCase("") && dto.getSortType()!=null ) {
+            pageable = new PageRequest(dto.getPage() - 1,
+                    dto.getSize(),
+                    dto.getSortType() == SortType.ASC ? Sort.Direction.ASC : Sort.Direction.DESC,
+                    dto.getSortBy()
+            );
+        }
+        else {
+            pageable = new PageRequest(dto.getPage() - 1, dto.getSize());
+        }
+
+        return pageable;
+    }
+
+    /**
+     * Generate the search specification
+     *
+     * @param dto the data transfer object
+     * @return the specifications
+     */
+    protected abstract Specifications<T> generateSearchSpecs(U dto);
+
+    /**
+     * Search entities, filter by data tranfer object
+     *
+     * @param searchDTO the data transfer object
+     * @return the search result
+     * @throws ServiceException the exception
+     */
+    public SearchResult<T> search(U searchDTO) throws ServiceException {
+        SearchResult<T> searchResult = new SearchResult<T>();
+
+        // Get the pageable object
+        Pageable pageable = getPageRequestFromDTO(searchDTO);
+        Page<T> result = null;
+
+        // Generate search specs
+        Specifications<T> specs = generateSearchSpecs(searchDTO);
+
+        try {
+            result = repository.findAll(specs,pageable);
+            // Change result to list
+            List<T> data = IteratorUtils.toList(result.iterator());
+
+            // Set search result data
+            searchResult.setTotal(result.getTotalElements());
+            searchResult.setTotalPage(result.getTotalPages());
+            searchResult.setData(data);
+        }
+        catch(PersistenceException e) {
+            throw new ServiceException("Error occur when search "+classType.getCanonicalName(),e);
+        }
+
+        return searchResult;
     }
 
 }

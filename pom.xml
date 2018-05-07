@@ -25,6 +25,8 @@
         <oauth.version>2.2.1.RELEASE</oauth.version>
         <lombok.version>1.16.20</lombok.version>
         <postgresql.version>9.1-901.jdbc4</postgresql.version>
+        <junit.version>4.12</junit.version>
+        <common_collection.version>3.2.2</common_collection.version>
     </properties>
 
     <dependencies>
@@ -67,7 +69,19 @@
             <version>${postgresql.version}</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/junit/junit -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
 
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>${common_collection.version}</version>
+        </dependency>
 
     </dependencies>
 
