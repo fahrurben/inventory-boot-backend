@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ActivableEntity {
+public class ActivableEntity extends AuditableEntity {
 
     @Basic
     @NotNull
