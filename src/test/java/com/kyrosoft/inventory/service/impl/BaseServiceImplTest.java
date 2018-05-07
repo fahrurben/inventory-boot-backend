@@ -1,6 +1,8 @@
 package com.kyrosoft.inventory.service.impl;
 
+import com.kyrosoft.inventory.model.Customer;
 import com.kyrosoft.inventory.model.Vendor;
+import com.kyrosoft.inventory.repository.CustomerRepository;
 import com.kyrosoft.inventory.repository.VendorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -38,13 +40,20 @@ public class BaseServiceImplTest {
 
     protected List<Vendor> vendors = new ArrayList<>();
 
+    protected List<Customer> customers = new ArrayList<>();
+
     @Autowired
     VendorRepository vendorRepository;
 
+    @Autowired
+    CustomerRepository customerRepository;
+
     protected void seedFactory() {
         this.vendors = new ArrayList<>();
+        this.customers = new ArrayList<>();
 
         vendorSeed();
+        customerSeed();
     }
 
     protected void vendorSeed() {
@@ -60,6 +69,23 @@ public class BaseServiceImplTest {
                 vendorRepository.save(vendor);
 
                 this.vendors.add(vendor);
+            }
+        }
+    }
+
+    protected void customerSeed() {
+        if(this.customers.isEmpty()) {
+            for (int i = 1; i <= seedNumber; i++) {
+                Customer customer = new Customer();
+                customer.setName(stringTest + i);
+                customer.setIsActive(boolTest);
+                customer.setCreatedBy(stringTest);
+                customer.setCreatedDate(dateTest);
+                customer.setUpdatedBy(stringTest);
+                customer.setUpdatedDate(dateTest);
+                customerRepository.save(customer);
+
+                this.customers.add(customer);
             }
         }
     }
