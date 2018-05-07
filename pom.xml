@@ -24,6 +24,7 @@
         <java.version>1.8</java.version>
         <oauth.version>2.2.1.RELEASE</oauth.version>
         <lombok.version>1.16.20</lombok.version>
+        <postgresql.version>9.1-901.jdbc4</postgresql.version>
     </properties>
 
     <dependencies>
@@ -31,6 +32,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <!-- oauth -->
@@ -52,6 +59,14 @@
             <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/postgresql/postgresql -->
+        <dependency>
+            <groupId>postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${postgresql.version}</version>
+        </dependency>
+
 
 
     </dependencies>
