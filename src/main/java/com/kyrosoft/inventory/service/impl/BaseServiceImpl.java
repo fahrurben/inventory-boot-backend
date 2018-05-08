@@ -5,6 +5,7 @@ import com.kyrosoft.inventory.model.*;
 import com.kyrosoft.inventory.model.dto.BaseDTO;
 import com.kyrosoft.inventory.model.dto.SortType;
 import com.kyrosoft.inventory.repository.BaseRepository;
+import com.kyrosoft.inventory.service.PredicateBuilder;
 import org.apache.commons.collections.IteratorUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,7 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
-import javax.persistence.PersistenceException;
+import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -39,6 +40,9 @@ public abstract class BaseServiceImpl<T extends IdentifiableEntity,
         S extends BaseRepository<T,Long>,
         U extends BaseDTO
         > {
+
+    @PersistenceContext
+    protected EntityManager em;
 
     /**
      * Repository used for database operation
@@ -247,7 +251,7 @@ public abstract class BaseServiceImpl<T extends IdentifiableEntity,
      * @param dto the data transfer object
      * @return the specifications
      */
-    protected abstract Specifications<T> generateSearchSpecs(U dto);
+    protected abstract List<Predicate> generateSearchSpecs(U dto, CriteriaBuilder criteriaBuilder, Root<T> root);
 
     /**
      * Search entities, filter by data tranfer object
@@ -257,23 +261,43 @@ public abstract class BaseServiceImpl<T extends IdentifiableEntity,
      * @throws ServiceException the exception
      */
     public SearchResult<T> search(U searchDTO) throws ServiceException {
+        // Check if the page and size invalid
+        if(searchDTO.getSize()==0) {
+            searchDTO.setSize(10);
+        }
+
+        if(searchDTO.getPage()==0) {
+            searchDTO.setPage(1);
+        }
+
         SearchResult<T> searchResult = new SearchResult<T>();
 
-        // Get the pageable object
-        Pageable pageable = getPageRequestFromDTO(searchDTO);
-        Page<T> result = null;
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<T> q = cb.createQuery(classType);
+        Root<T> root = q.from(classType);
 
-        // Generate search specs
-        Specifications<T> specs = generateSearchSpecs(searchDTO);
+        CriteriaQuery<T> criteriaQuery = q.select(root);
+        CriteriaQuery<Long> criteriaCount = cb.createQuery(Long.class);
+        criteriaCount.select(cb.count(criteriaCount.from(classType)));
 
+        List<Predicate> predicates = generateSearchSpecs(searchDTO, cb, root);
+        Predicate[] arrPredicates = predicates.toArray(new Predicate[predicates.size()]);
+        criteriaQuery.where(cb.and(arrPredicates));
+
+        TypedQuery<T> typedQuery = em.createQuery(criteriaQuery);
+        typedQuery.setFirstResult((searchDTO.getPage()-1) * searchDTO.getSize());
+        typedQuery.setMaxResults(searchDTO.getSize());
+
+        criteriaCount.where(cb.and(arrPredicates));
         try {
-            result = repository.findAll(specs,pageable);
-            // Change result to list
-            List<T> data = IteratorUtils.toList(result.iterator());
+            Integer count = em.createQuery(criteriaCount).getSingleResult().intValue();
+            Integer page = count / searchDTO.getSize();
+            page += count % searchDTO.getSize() != 0 ? 1 : 0;
+            List<T> data = typedQuery.getResultList();
 
             // Set search result data
-            searchResult.setTotal(result.getTotalElements());
-            searchResult.setTotalPage(result.getTotalPages());
+            searchResult.setTotal(count);
+            searchResult.setTotalPage(page);
             searchResult.setData(data);
         }
         catch(PersistenceException e) {

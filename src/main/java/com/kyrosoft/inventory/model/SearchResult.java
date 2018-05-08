@@ -12,7 +12,7 @@ public class SearchResult<T> {
     /**
      * Total data
      */
-    private long total;
+    private int total;
 
     /**
      * Total page
@@ -29,11 +29,11 @@ public class SearchResult<T> {
      */
     public SearchResult() {}
 
-    public long getTotal() {
+    public int getTotal() {
         return total;
     }
 
-    public void setTotal(long total) {
+    public void setTotal(int total) {
         this.total = total;
     }
 

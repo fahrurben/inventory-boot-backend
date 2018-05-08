@@ -13,6 +13,8 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional
@@ -27,23 +29,16 @@ public class VendorServiceImpl
         this.vendorRepository = vendorRepository;
     }
 
-    protected Specifications<Vendor> generateSearchSpecs(BaseDTO dto) {
-        Specifications<Vendor> specs = Specifications.where(null);
+    protected List<Predicate> generateSearchSpecs(BaseDTO dto, CriteriaBuilder cb, Root<Vendor> root) {
+
+        List<Predicate> predicates = new ArrayList<>();
 
         if(dto.getName() != null) {
-            specs = specs.and(new Specification<Vendor>() {
-                public Predicate toPredicate(Root<Vendor> root, CriteriaQuery<?> query,
-                                             CriteriaBuilder builder) {
-
-                    Predicate ret = builder.like(
-                            builder.lower(root.get("name")),
-                            "%" + dto.getName() + "%".toLowerCase());
-
-                    return ret;
-                }
-            });
+            predicates.add(cb.like(
+                    cb.lower(root.get("name")),
+                    "%" + dto.getName() + "%".toLowerCase()));
         }
 
-        return specs;
+        return predicates;
     }
 }

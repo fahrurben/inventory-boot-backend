@@ -60,12 +60,13 @@ public class VendorServiceImplTest extends BaseServiceImplTest {
     @Test
     public void searchVendor_OK() throws ServiceException {
         BaseDTO dto = new BaseDTO();
-        dto.setName("test");
+        dto.setName("test1");
         dto.setPage(1);
-        dto.setSize(20);
+        dto.setSize(10);
 
         SearchResult<Vendor> searchResult = vendorService.search(dto);
-        assertEquals(20, searchResult.getTotal());
+        assertEquals(11, searchResult.getTotal());
+        assertEquals(2, searchResult.getTotalPage());
     }
 
 }
