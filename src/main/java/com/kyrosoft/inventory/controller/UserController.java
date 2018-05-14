@@ -8,12 +8,6 @@ import java.security.Principal;
 @RestController
 public class UserController {
 
-    @RequestMapping("/api/user/me")
-    public Principal user(Principal principal) {
-        System.out.println(principal);
-        return principal;
-    }
-
     @RequestMapping("/api/me")
     public Principal me(Principal principal) {
         System.out.println(principal);
