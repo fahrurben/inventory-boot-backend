@@ -31,25 +31,14 @@ public class CustomerServiceImpl
 
         List<Predicate> predicates = new ArrayList<>();
 
-        /*
-        if(dto.getName() != null) {
-            specs = specs.and(new Specification<Customer>() {
-                public Predicate toPredicate(Root<Customer> root, CriteriaQuery<?> query,
-                                             CriteriaBuilder builder) {
-
-                    Predicate ret = builder.like(
-                            builder.lower(root.get("name")),
-                            "%" + dto.getName() + "%".toLowerCase());
-
-                    return ret;
-                }
-            });
-        }
-        */
         if(dto.getName() != null) {
             predicates.add(cb.like(
                     cb.lower(root.get("name")),
                     "%" + dto.getName() + "%".toLowerCase()));
+        }
+
+        if(dto.getIsActive() != null) {
+            predicates.add(cb.equal(root.get("isActive"), dto.getIsActive()));
         }
 
         return predicates;

@@ -1,9 +1,9 @@
 package com.kyrosoft.inventory.service.impl;
 
-import com.kyrosoft.inventory.model.Vendor;
+import com.kyrosoft.inventory.model.ProductCategory;
 import com.kyrosoft.inventory.model.dto.BaseDTO;
-import com.kyrosoft.inventory.repository.VendorRepository;
-import com.kyrosoft.inventory.service.VendorService;
+import com.kyrosoft.inventory.repository.ProductCategoryRepository;
+import com.kyrosoft.inventory.service.ProductCategoryService;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -15,18 +15,18 @@ import java.util.List;
 
 @Service
 @Transactional
-public class VendorServiceImpl
-    extends BaseServiceImpl<Vendor, VendorRepository, BaseDTO>
-    implements VendorService {
+public class ProductCategoryServiceImpl
+        extends BaseServiceImpl<ProductCategory, ProductCategoryRepository, BaseDTO>
+        implements ProductCategoryService {
 
-    private VendorRepository vendorRepository;
+    private ProductCategoryRepository productCategoryRepository;
 
-    public VendorServiceImpl(VendorRepository vendorRepository) {
-        super(vendorRepository, Vendor.class);
-        this.vendorRepository = vendorRepository;
+    public ProductCategoryServiceImpl(ProductCategoryRepository productCategoryRepository) {
+        super(productCategoryRepository, ProductCategory.class);
+        this.productCategoryRepository = productCategoryRepository;
     }
 
-    protected List<Predicate> generateSearchSpecs(BaseDTO dto, CriteriaBuilder cb, Root<Vendor> root) {
+    protected List<Predicate> generateSearchSpecs(BaseDTO dto, CriteriaBuilder cb, Root<ProductCategory> root) {
 
         List<Predicate> predicates = new ArrayList<>();
 

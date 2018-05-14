@@ -26,5 +26,6 @@ public class BaseDTO {
 
     private String name;
 
+    private Boolean isActive;
 
 }

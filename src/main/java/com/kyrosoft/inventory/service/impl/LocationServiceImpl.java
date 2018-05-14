@@ -1,9 +1,9 @@
 package com.kyrosoft.inventory.service.impl;
 
-import com.kyrosoft.inventory.model.Vendor;
+import com.kyrosoft.inventory.model.Location;
 import com.kyrosoft.inventory.model.dto.BaseDTO;
-import com.kyrosoft.inventory.repository.VendorRepository;
-import com.kyrosoft.inventory.service.VendorService;
+import com.kyrosoft.inventory.repository.LocationRepository;
+import com.kyrosoft.inventory.service.LocationService;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -15,18 +15,18 @@ import java.util.List;
 
 @Service
 @Transactional
-public class VendorServiceImpl
-    extends BaseServiceImpl<Vendor, VendorRepository, BaseDTO>
-    implements VendorService {
+public class LocationServiceImpl
+        extends BaseServiceImpl<Location, LocationRepository, BaseDTO>
+        implements LocationService {
 
-    private VendorRepository vendorRepository;
+    private LocationRepository locationRepository;
 
-    public VendorServiceImpl(VendorRepository vendorRepository) {
-        super(vendorRepository, Vendor.class);
-        this.vendorRepository = vendorRepository;
+    public LocationServiceImpl(LocationRepository locationRepository) {
+        super(locationRepository, Location.class);
+        this.locationRepository = locationRepository;
     }
 
-    protected List<Predicate> generateSearchSpecs(BaseDTO dto, CriteriaBuilder cb, Root<Vendor> root) {
+    protected List<Predicate> generateSearchSpecs(BaseDTO dto, CriteriaBuilder cb, Root<Location> root) {
 
         List<Predicate> predicates = new ArrayList<>();
 
@@ -42,4 +42,5 @@ public class VendorServiceImpl
 
         return predicates;
     }
+
 }
