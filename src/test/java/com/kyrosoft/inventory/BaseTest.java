@@ -1,5 +1,6 @@
 package com.kyrosoft.inventory;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kyrosoft.inventory.model.*;
 import com.kyrosoft.inventory.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,8 @@ public class BaseTest {
     protected final Long IdTest = 1L;
 
     protected final Integer seedNumber = 20;
+
+    protected ObjectMapper objectMapper = new ObjectMapper();
 
     protected List<Vendor> vendors = new ArrayList<>();
 

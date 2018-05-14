@@ -98,9 +98,9 @@ public abstract class BaseServiceImpl<T extends IdentifiableEntity,
      * @param entity the entity
      */
     protected void setAuditableInformationCreate(T entity) {
-        ((AuditableEntity) entity).setCreatedBy("test");
+        ((AuditableEntity) entity).setCreatedBy(ServiceContext.getCurrentUser());
         ((AuditableEntity) entity).setCreatedDate(new Date());
-        ((AuditableEntity) entity).setUpdatedBy("test");
+        ((AuditableEntity) entity).setUpdatedBy(ServiceContext.getCurrentUser());
         ((AuditableEntity) entity).setUpdatedDate(new Date());
     }
 
@@ -110,7 +110,7 @@ public abstract class BaseServiceImpl<T extends IdentifiableEntity,
      * @param entity th entity
      */
     protected void setAuditableInformationUpdate(T entity) {
-        ((AuditableEntity) entity).setUpdatedBy("test");
+        ((AuditableEntity) entity).setUpdatedBy(ServiceContext.getCurrentUser());
         ((AuditableEntity) entity).setUpdatedDate(new Date());
     }
 

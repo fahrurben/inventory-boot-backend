@@ -4,6 +4,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kyrosoft.inventory.BaseTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.JacksonJsonParser;
@@ -22,6 +23,8 @@ public class BaseControllerTest extends BaseTest {
 
     @Autowired
     FilterChainProxy springSecurityFilterChain;
+
+    String accessToken;
 
     MockMvc mockMvc;
 
