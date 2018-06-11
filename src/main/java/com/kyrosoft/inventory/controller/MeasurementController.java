@@ -3,7 +3,6 @@ package com.kyrosoft.inventory.controller;
 import com.kyrosoft.inventory.InventoryException;
 import com.kyrosoft.inventory.model.Measurement;
 import com.kyrosoft.inventory.model.SearchResult;
-import com.kyrosoft.inventory.model.dto.BaseDTO;
 import com.kyrosoft.inventory.model.dto.MeasurementDTO;
 import org.springframework.web.bind.annotation.*;
 

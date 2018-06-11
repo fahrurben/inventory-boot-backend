@@ -9,10 +9,7 @@ import com.kyrosoft.inventory.model.IdentifiableEntity;
 import com.kyrosoft.inventory.model.SearchResult;
 import com.kyrosoft.inventory.model.ServiceContext;
 import com.kyrosoft.inventory.model.dto.BaseDTO;
-import com.kyrosoft.inventory.service.BaseService;
-import com.kyrosoft.inventory.service.CustomerService;
-import com.kyrosoft.inventory.service.MeasurementService;
-import com.kyrosoft.inventory.service.VendorService;
+import com.kyrosoft.inventory.service.*;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,6 +24,9 @@ public abstract class BaseController {
 
     @Autowired
     MeasurementService measurementService;
+
+    @Autowired
+    LocationService locationService;
 
     protected static final Logger logger = Logger.getLogger("InventoryBackend");
 
