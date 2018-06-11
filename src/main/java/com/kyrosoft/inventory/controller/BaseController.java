@@ -11,6 +11,7 @@ import com.kyrosoft.inventory.model.ServiceContext;
 import com.kyrosoft.inventory.model.dto.BaseDTO;
 import com.kyrosoft.inventory.service.BaseService;
 import com.kyrosoft.inventory.service.CustomerService;
+import com.kyrosoft.inventory.service.VendorService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,9 @@ public abstract class BaseController {
 
     @Autowired
     CustomerService customerService;
+
+    @Autowired
+    VendorService vendorService;
 
     protected static final Logger logger = Logger.getLogger("InventoryBackend");
 
@@ -49,16 +53,17 @@ public abstract class BaseController {
         return e;
     }
 
-    protected void logExceptionWrapper(
-            CustomerService service,
-            Customer customer,
+    protected <T extends IdentifiableEntity,U extends BaseService> void
+        logExceptionWrapper(
+            U service,
+            T entity,
             CrudService crudService)
         throws InventoryException
     {
 
         try {
-            logEnter(customer);
-            crudService.doCrud(service,customer);
+            logEnter(entity);
+            crudService.doCrud(service,entity);
         }
         catch(ServiceException|JsonProcessingException e) {
             throw logException(new InventoryException("Error",e));
