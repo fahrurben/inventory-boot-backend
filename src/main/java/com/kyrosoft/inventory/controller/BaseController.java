@@ -3,7 +3,13 @@ package com.kyrosoft.inventory.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kyrosoft.inventory.InventoryException;
+import com.kyrosoft.inventory.ServiceException;
+import com.kyrosoft.inventory.model.Customer;
+import com.kyrosoft.inventory.model.IdentifiableEntity;
+import com.kyrosoft.inventory.model.SearchResult;
 import com.kyrosoft.inventory.model.ServiceContext;
+import com.kyrosoft.inventory.model.dto.BaseDTO;
+import com.kyrosoft.inventory.service.BaseService;
 import com.kyrosoft.inventory.service.CustomerService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,5 +47,60 @@ public abstract class BaseController {
         String log = String.format("[error]POST:%s;user:%s", api, username);
         logger.error(log, e);
         return e;
+    }
+
+    protected void logExceptionWrapper(
+            CustomerService service,
+            Customer customer,
+            CrudService crudService)
+        throws InventoryException
+    {
+
+        try {
+            logEnter(customer);
+            crudService.doCrud(service,customer);
+        }
+        catch(ServiceException|JsonProcessingException e) {
+            throw logException(new InventoryException("Error",e));
+        }
+
+        logExit();
+    }
+
+    protected <T extends IdentifiableEntity,U extends BaseService> T getEntity(U service, Long id)
+            throws InventoryException {
+
+        T entity = null;
+
+        try {
+            logEnter(null);
+            entity = (T) service.get(id);
+        }
+        catch(ServiceException |JsonProcessingException e) {
+            throw logException(new InventoryException("Error get user",e));
+        }
+
+        logExit();
+
+        return entity;
+    }
+
+    protected <T extends IdentifiableEntity,U extends BaseService, V extends BaseDTO>
+        SearchResult<T> searchEntities(U service, V dto)
+            throws InventoryException {
+
+        SearchResult<T> searchResult = null;
+
+        try {
+            logEnter(dto);
+            searchResult = service.search(dto);
+        }
+        catch(ServiceException|JsonProcessingException e) {
+            throw logException(new InventoryException("Error search user", e));
+        }
+
+        logExit();
+
+        return searchResult;
     }
 }

@@ -1,8 +1,6 @@
 package com.kyrosoft.inventory.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.kyrosoft.inventory.InventoryException;
-import com.kyrosoft.inventory.ServiceException;
 import com.kyrosoft.inventory.model.Customer;
 import com.kyrosoft.inventory.model.SearchResult;
 import com.kyrosoft.inventory.model.dto.BaseDTO;
@@ -23,15 +21,13 @@ public class CustomerController extends BaseController {
     public Customer create(@RequestBody Customer customer)
             throws InventoryException {
 
-        try {
-            logEnter(customer);
-            customerService.create(customer);
-        }
-        catch(ServiceException|JsonProcessingException e) {
-            throw logException(new InventoryException("Error creating user",e));
-        }
+        logExceptionWrapper(
+                customerService,
+                customer,
+                (service, entity) -> {
+                    service.create(entity);
+                });
 
-        logExit();
         return customer;
     }
 
@@ -39,16 +35,14 @@ public class CustomerController extends BaseController {
     public Customer update(@PathVariable Long id, @RequestBody Customer customer)
         throws InventoryException {
 
-        try {
-            logEnter(customer);
-            customer.setId(id);
-            customer = customerService.update(customer);
-        }
-        catch(ServiceException|JsonProcessingException e) {
-            throw logException(new InventoryException("Error updating user",e));
-        }
+        logExceptionWrapper(
+                customerService,
+                customer,
+                (service, entity) -> {
+                    entity.setId(id);
+                    service.update(entity);
+                });
 
-        logExit();
         return customer;
     }
 
@@ -57,15 +51,9 @@ public class CustomerController extends BaseController {
         throws InventoryException {
 
         Customer customer = null;
-        try {
-            logEnter(customer);
-            customer = customerService.get(id);
-        }
-        catch(ServiceException|JsonProcessingException e) {
-            throw logException(new InventoryException("Error get user", e));
-        }
 
-        logExit();
+        customer = getEntity(customerService, id);
+
         return customer;
     }
 
@@ -74,15 +62,8 @@ public class CustomerController extends BaseController {
             throws InventoryException {
         SearchResult<Customer> searchResult = null;
 
-        try {
-            logEnter(dto);
-            searchResult = customerService.search(dto);
-        }
-        catch(ServiceException|JsonProcessingException e) {
-            throw logException(new InventoryException("Error search user", e));
-        }
+        searchResult = searchEntities(customerService, dto);
 
-        logExit();
         return searchResult;
     }
 }

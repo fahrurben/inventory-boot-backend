@@ -27,10 +27,7 @@ public class CustomerControllerTest extends BaseControllerTest {
 
     @Before
     public void setup() throws Exception {
-        seedFactory();
-        ServiceContext.setCurrentUser(stringTest);
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).addFilter(springSecurityFilterChain).build();
-        this.accessToken = obtainAccessToken("john", "123");
+        setupGeneric();
     }
 
     @Test

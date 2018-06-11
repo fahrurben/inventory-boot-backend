@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 
 import com.kyrosoft.inventory.BaseTest;
+import com.kyrosoft.inventory.model.ServiceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.http.MediaType;
@@ -14,6 +15,7 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
@@ -59,4 +61,10 @@ public class BaseControllerTest extends BaseTest {
                 .content(objectMapper.writeValueAsString(entity));
     }
 
+    void setupGeneric() throws Exception {
+        seedFactory();
+        ServiceContext.setCurrentUser(stringTest);
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).addFilter(springSecurityFilterChain).build();
+        this.accessToken = obtainAccessToken("john", "123");
+    }
 }
