@@ -11,6 +11,7 @@ import com.kyrosoft.inventory.model.ServiceContext;
 import com.kyrosoft.inventory.model.dto.BaseDTO;
 import com.kyrosoft.inventory.service.BaseService;
 import com.kyrosoft.inventory.service.CustomerService;
+import com.kyrosoft.inventory.service.MeasurementService;
 import com.kyrosoft.inventory.service.VendorService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ public abstract class BaseController {
 
     @Autowired
     VendorService vendorService;
+
+    @Autowired
+    MeasurementService measurementService;
 
     protected static final Logger logger = Logger.getLogger("InventoryBackend");
 
