@@ -26,9 +26,6 @@ public class BaseControllerTest extends BaseTest {
     @Autowired
     WebApplicationContext wac;
 
-    @Autowired
-    FilterChainProxy springSecurityFilterChain;
-
     String accessToken;
 
     MockMvc mockMvc;
@@ -64,7 +61,6 @@ public class BaseControllerTest extends BaseTest {
     void setupGeneric() throws Exception {
         seedFactory();
         ServiceContext.setCurrentUser(stringTest);
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).addFilter(springSecurityFilterChain).build();
-        this.accessToken = obtainAccessToken("john", "123");
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
     }
 }
