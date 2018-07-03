@@ -28,6 +28,9 @@ public abstract class BaseController {
     @Autowired
     LocationService locationService;
 
+    @Autowired
+    ProductService productService;
+
     protected static final Logger logger = Logger.getLogger("InventoryBackend");
 
     protected String api = "";
