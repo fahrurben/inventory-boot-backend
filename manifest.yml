@@ -1,0 +1,8 @@
+---
+applications:
+- name: inventory
+  memory: 768M
+  random-route: true
+  instances: 1
+  buildpack: java_buildpack
+  path: target/inventory-boot-backend-0.0.1-SNAPSHOT.jar

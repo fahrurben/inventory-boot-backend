@@ -1,0 +1,10 @@
+---
+spring:
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/inventory_boot
+    username: postgres
+    password: 12345
+  jpa:
+    hibernate.ddl-auto: create-drop
+    show_sql: true
